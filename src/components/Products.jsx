@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react'
+import { FcSearch } from "react-icons/fc";
+import { FaHouseChimneyUser } from "react-icons/fa6";
+import { FaBabyCarriage } from "react-icons/fa";
 
 export function Products() {
     const [productos, setProductos] = useState([])
+    const [productoBuscado, setProductoBuscado] = useState('')
 
     const productosAntiguo = [
         {
@@ -40,32 +44,40 @@ export function Products() {
 
     useEffect(
         () => {
-            fetch('https://demoproyectobackendvercel.vercel.app/products')
+            fetch('https://demoproyectobackendvercel.vercel.app/products/'+productoBuscado)
                 .then(response => response.json())
                 .then(data => {
                     setProductos(data)
                 })
-        },     
-        []
+        },
+        [productoBuscado]
     );
+    
+    const buscarProducto =(parametro)=>{
+        setProductoBuscado(parametro.target.value);        
+    }
 
     return (
         <>
             <h1>Lista de Productos</h1>
-
-            {
-                productosAntiguo.map((productoDetalle, index) => (
-                    <ul key={index}>
-                        <li>{productoDetalle.nombre}</li>
-
-                    </ul>
-                ))
-            }
-            <hr />
+            <input type="text" onChange={buscarProducto} name="" id="" />
+           
             {
                 productos.map((productoDetalle, index) => (
                     <ul key={index}>
-                        <li>{productoDetalle.nombre}</li>
+                        <li>
+                        {productoDetalle.nombre}
+                        <br/>
+                        <img src={productoDetalle.imagen} 
+                        alt=""
+                        style={{width:'100px'}}  />
+                        <br/>
+                        ${productoDetalle.precio}
+                        <br/>
+                        Color:{productoDetalle.color}
+                        <br/>
+                        Descripcion:{productoDetalle.descripcion}
+                        </li>
 
                     </ul>
                 ))
